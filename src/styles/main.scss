@@ -1,0 +1,37 @@
+html, body {
+	height: 100%;
+}
+
+body {
+	background-color: #222;
+	margin: 0;
+	overflow: hidden;
+	font-family: sans-serif;
+	font-size: 13px;
+}
+
+.container {
+	width: calc(100% - 0px);
+	height: calc(100% - 0px);
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+#upload {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	padding: 5px;
+	background: rgba(0, 0, 0, 0.66);
+	color: white;
+}
+
+#info {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	padding: 5px;
+	background: rgba(0, 0, 0, 0.66);
+	color: white;
+}
