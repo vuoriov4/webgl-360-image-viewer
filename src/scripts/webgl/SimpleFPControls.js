@@ -84,7 +84,6 @@ export default class SimpleFPControls {
   }
 
   onMouseUp(e) {
-      console.log("???");
       this.mouseDown = false;
   }
   
