@@ -18,7 +18,7 @@ export default class WebGLView {
 		this.clock = new THREE.Clock();
 		this.controls = new SimpleFPControls(this.camera);
   		this.scene.add(this.controls.getObject());
-		const geometry = new THREE.SphereGeometry(1.0, 1024, 512);
+		const geometry = new THREE.SphereGeometry(1.0, 512, 256);
 		const texture_hemisphere = new THREE.TextureLoader().load("/default.jpg");
 		texture_hemisphere.needsUpdate = true;
 		texture_hemisphere.minFilter = THREE.LinearFilter;
