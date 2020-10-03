@@ -83,10 +83,11 @@ vec2 uv_cube(vec3 dir) {
 }
 
 void main() {
-    vec3 dir = normalize(vPosition);
     if (imageFormat == 0) {
+        vec3 dir = normalize(vPosition);
         gl_FragColor = texture2D(color, uv_hemisphere(dir));
     } else if (imageFormat == 1) {
+        vec3 dir = normalize(vec3(vPosition.x, vPosition.y * 4.0/3.0, vPosition.z));
         gl_FragColor = texture2D(color, uv_cube(dir));
     } else {
         gl_FragColor = vec4(1, 0, 0, 1);
