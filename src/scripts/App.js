@@ -59,8 +59,8 @@ export default class App {
 	}
 
 	resize() {
-		const vw = window.innerWidth - 20;
-		const vh = window.innerHeight - 50;
+		const vw = window.innerWidth;
+		const vh = window.innerHeight;
 		this.contexts.forEach(webgl => {
 			if (webgl) webgl.resize(vw, vh);
 		});
