@@ -10,7 +10,12 @@
 	<image id="image" src="default.jpg" style="visibility: hidden"/>
 	<div class="container"></div>
 	<div id="upload">
-		<input type='file'/> 
+		<input type='file' id="input"/> 
+		Image format:
+		<select id="format"> 
+			<option selected>Equirectangular</option>
+			<option>Cube map (3x2)</option>
+		</select>
 	</div>
 	<div id="info">
 		Drag the screen to look around

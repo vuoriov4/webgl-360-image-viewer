@@ -4,13 +4,15 @@ import WebGLView from './webgl/WebGLView';
 export default class App {
 
 	constructor() {
+		this.contexts = [];
 		this.el = document.querySelector('.container');
 	}
 
 	init() {
-		this.webgl = new WebGLView(this);
-		this.webgl.init();
-		this.el.appendChild(this.webgl.renderer.domElement);
+		const webgl = new WebGLView(this, 0);
+		webgl.init();
+		this.contexts.push(webgl);
+		this.el.appendChild(webgl.renderer.domElement);
 		this.addListeners();
 		this.animate();
 		this.resize();
@@ -21,45 +23,59 @@ export default class App {
 		window.addEventListener('resize', this.resize.bind(this));
 		window.addEventListener('keyup', this.keyup.bind(this));
 		window.addEventListener('keydown', this.keydown.bind(this));
-		window.addEventListener('load', () => {
-			document.querySelector('input[type="file"]').addEventListener('change', e => {
-				if (e.target.files && e.target.files[0]) {
-					const img = document.getElementById('image');
-					img.src = URL.createObjectURL(e.target.files[0]); 
-					img.onload = this.webgl.updateTexture.bind(this.webgl);
-					console.log(img);
-				}
+		document.getElementById('input').addEventListener('change', e => {
+			const file = e.target.files[0];
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				document.getElementById("image").src = reader.result;
+				this.contexts.forEach(webgl => { webgl.updateTexture() });
+			}
+			if (file) reader.readAsDataURL(file);
+		});
+		document.getElementById('format').addEventListener('change', e => {
+			this.contexts.forEach(webgl => {
+				if (e.target[0].selected && webgl) webgl.updateImageFormat(0);
+				if (e.target[1].selected && webgl) webgl.updateImageFormat(1);
 			});
 		});
 	}
 	
 	animate() {
-		this.webgl.renderer.setAnimationLoop(() => {
-			this.update();
-			this.draw();
-		});
+		this.update();
+		this.draw();
+		window.requestAnimationFrame(this.animate.bind(this));
 	}
 	
 	update() {
-		if (this.webgl) this.webgl.update();
+		this.contexts.forEach(webgl => {
+			if (webgl) webgl.update();
+		});
 	}
 
 	draw() {
-		if (this.webgl) this.webgl.draw();
+		this.contexts.forEach(webgl => {
+			if (webgl) webgl.draw();
+		});
 	}
 
 	resize() {
-		const vw = document.querySelector('.container').offsetWidth || window.innerWidth;
-		const vh = document.querySelector('.container').offsetHeight || window.innerHeight;
-		if (this.webgl) this.webgl.resize(vw, vh);
+		const vw = window.innerWidth - 20;
+		const vh = window.innerHeight - 50;
+		this.contexts.forEach(webgl => {
+			if (webgl) webgl.resize(vw, vh);
+		});
 	}
 
 	keyup(e) {
-		if (this.webgl) this.webgl.keyup(e.keyCode);
+		this.contexts.forEach(webgl => {
+			if (webgl) webgl.keyup(e.keyCode);
+		});
 	}
 	
 	keydown(e) {
-		if (this.webgl) this.webgl.keydown(e.keyCode);
+		this.contexts.forEach(webgl => {
+			if (webgl) webgl.keydown(e.keyCode);
+		});
 	}
 	
 }

@@ -19,7 +19,7 @@ export default class SimpleFPControls {
   constructor(object) {
     this.object = object;
     this.enabled = true;
-    this.movementSpeed = 50.0;
+    this.movementSpeed = 100.0;
     this.lookSpeedX = 30.0;
     this.lookSpeedY = 30.0;
     this.minY = Number.NEGATIVE_INFINITY;
