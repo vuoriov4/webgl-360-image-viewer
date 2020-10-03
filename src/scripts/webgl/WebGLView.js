@@ -18,7 +18,7 @@ export default class WebGLView {
 				 "color": { type: "t", value: color },
 				 "resolution": { type: "vec2", value: new THREE.Vector2() },
 				 "objectPosition": { type: "vec3", value: position },
-				 "imageFormat": { type: "int", value: 0 }
+				 "imageFormat": { type: "int", value: 1 }
 			},
 			vertexShader: glslify(require('../../shaders/default.vert')),
 			fragmentShader: glslify(require('../../shaders/default.frag'))
@@ -42,6 +42,8 @@ export default class WebGLView {
 		this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.001, 100);
 		this.camera.position.z = 0;
 		this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+		this.renderer.domElement.width = window.innerWidth;
+		this.renderer.domElement.height = window.innerHeight;
 		this.clock = new THREE.Clock();
 		this.controls = new SimpleFPControls(this.camera);
   		this.scene.add(this.controls.getObject());

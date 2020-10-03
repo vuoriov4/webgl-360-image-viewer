@@ -12,7 +12,22 @@ export default class App {
 		const webgl = new WebGLView(this, 0);
 		webgl.init();
 		this.contexts.push(webgl);
-		this.el.appendChild(webgl.renderer.domElement);
+		//this.el.appendChild(webgl.renderer.domElement);
+		const effects = [
+			Trixie.effects.colorBalance({r: 1.0, g: 1.0, b: 0.9}),
+			Trixie.effects.convolve({kernel: [1/9.0, 1/9.0, 1/9.0, 1/9.0, 1/9.0, 1/9.0, 1/9.0, 1/9.0, 1/9.0]}),
+			Trixie.effects.erode({element: [0, 1, 0, 1, 1, 1, 0, 1, 0]}),
+			Trixie.effects.dilate({element: [0, 1, 0, 1, 1, 1, 0, 1, 0]}),
+			Trixie.effects.convolve({kernel: [0, -0.25, 0, -0.25, 2.0, -0.25, 0, -0.25, 0]})
+		];
+		this.txCanvas = document.createElement('canvas');
+		this.txCanvas.id = "tx-canvas";
+		this.tx = new Trixie({
+			input: webgl.renderer.domElement,
+			effects: effects,
+			output: this.txCanvas
+		});
+		this.el.appendChild(this.txCanvas);
 		this.addListeners();
 		this.animate();
 		this.resize();
@@ -56,6 +71,11 @@ export default class App {
 		this.contexts.forEach(webgl => {
 			if (webgl) webgl.draw();
 		});
+		if (this.tx && this.tx.gl) {
+			this.tx.gl.bindTexture(this.tx.gl.TEXTURE_2D, this.tx.originalTexture);
+			this.tx.gl.texImage2D(this.tx.gl.TEXTURE_2D, 0, this.tx.gl.RGBA, this.tx.gl.RGBA, this.tx.gl.UNSIGNED_BYTE, this.contexts[0].renderer.domElement);
+		}
+		if (this.tx) this.tx.render();
 	}
 
 	resize() {
@@ -64,6 +84,10 @@ export default class App {
 		this.contexts.forEach(webgl => {
 			if (webgl) webgl.resize(vw, vh);
 		});
+		if (this.txCanvas) {
+			this.txCanvas.width = vw;
+			this.txCanvas.height = vh;
+		}
 	}
 
 	keyup(e) {
